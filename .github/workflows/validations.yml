@@ -3,7 +3,7 @@ name: Validations
 on: [push, pull_request]
 
 jobs:
-    build:
+    backend-build:
         runs-on: ubuntu-latest
 
         steps:
@@ -15,14 +15,14 @@ jobs:
               with:
                   node-version: '18'
 
-            - name: 'CD to Backend'
-              run: cd ./backend
-
             - name: Install Dependencies
+              working-directory: ./backend
               run: npm install
 
             - name: Run tests
+              working-directory: ./backend
               run: npm run test
 
             - name: Builds
+              working-directory: ./backend
               run: npm run build
