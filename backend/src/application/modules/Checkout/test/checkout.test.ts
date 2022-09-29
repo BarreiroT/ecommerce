@@ -28,7 +28,18 @@ const createOrder = () => {
     });
 };
 
+const setPaymentSystemVariablesToTesting = () => {
+    process.env.PAYMENT_SYSTEM_API_KEY = 'zJ8LFTBX6Ba8D611e9io13fDZAwj0QmKO1Hn1yIj';
+    process.env.PAYMENT_SYSTEM_ACCESS_TOKEN = 'd31f0721-2f85-44e7-bcc6-15e19d1a53cc';
+    process.env.PAYMENT_SYSTEM_ENTITY = 'Demo Mobbex';
+    process.env.PAYMENT_SYSTEM_USER = 'demo@mobbex.com';
+    process.env.PAYMENT_SYSTEM_PIN = '0000';
+};
+
 describe('Checkout System', () => {
+    before(() => {
+        setPaymentSystemVariablesToTesting();
+    });
     beforeEach(async () => {
         await testRunner.generateStorages();
     });
