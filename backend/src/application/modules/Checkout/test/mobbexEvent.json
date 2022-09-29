@@ -1,0 +1,75 @@
+{
+    "type": "checkout",
+    "data": {
+        "result": true,
+        "view": {
+            "type": "card"
+        },
+        "payment": {
+            "id": "ABC1234",
+            "description": "Mi Descripción",
+            "operation": {
+                "type": "payment.v2"
+            },
+            "status": {
+                "code": "200",
+                "text": "Aprobado",
+                "message": "Transacción Aprobada"
+            },
+            "total": 1564.33,
+            "currency": {
+                "code": "ARS",
+                "text": "Peso Argentino",
+                "symbol": "$"
+            },
+            "riskAnalysis": {
+                "band": "red",
+                "level": 7.1
+            },
+            "created": "2020-12-04T21:27:26.348Z",
+            "updated": "2020-12-04T21:27:28.280Z",
+            "reference": "external_reference",
+            "source": {
+                "name": "Visa",
+                "type": "card",
+                "reference": "visa",
+                "number": "4507 15** **** 1234",
+                "expiration": {
+                    "month": "10",
+                    "year": "23"
+                },
+                "installment": {
+                    "description": "1 Cuota",
+                    "amount": 140,
+                    "count": 1,
+                    "reference": "1"
+                }
+            }
+        },
+        "entity": {
+            "name": "Wayne Inc",
+            "uid": "iambatman"
+        },
+        "customer": {
+            "uid": "12123123",
+            "name": "Juan Perez Wayne",
+            "phone": "12123123",
+            "identification": "110303456",
+            "email": "soybatman@wayneinc.com"
+        },
+        "user": {
+            "name": "Juan Perez Wayne",
+            "email": "soybatman@wayneinc.com"
+        },
+        "source": {
+            "name": "Visa",
+            "type": "card",
+            "reference": "visa"
+        },
+        "checkout": {
+            "uid": "TK0L70HEE9M4T6EBPH",
+            "total": 140.00,
+            "currency": "ARS"
+        }
+    }
+}
