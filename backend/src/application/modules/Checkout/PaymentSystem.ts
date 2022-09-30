@@ -67,6 +67,7 @@ export class PaymentSystem {
             currency,
             customer,
             webhook: process.env.MOBBEX_WEBHOOK_URL,
+            return_url: process.env.CLIENT_ORIGIN,
         };
 
         const mobbexCheckout = (await mobbex.checkout.create(checkout)) as MobbexCheckout;
