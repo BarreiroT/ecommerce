@@ -2,6 +2,7 @@ import { config } from 'dotenv';
 config();
 
 import express, { NextFunction, Request, Response } from 'express';
+import cors from 'cors';
 
 import { Application } from './application/application';
 import { CheckoutSystem } from './application/modules/Checkout/CheckoutSystem';
@@ -10,6 +11,7 @@ import { PostgresOrderRepository } from './application/modules/Checkout/persiste
 import { PostgresSource } from './database';
 import { HttpException } from './exceptions/HttpException';
 import { router } from './routes';
+import { webhookRouter } from './routes/webhook';
 
 PostgresSource.initialize().then((source) => {
     const app = express();
@@ -21,6 +23,14 @@ PostgresSource.initialize().then((source) => {
     app.locals.application = new Application(checkoutSystem);
 
     app.use(express.json());
+
+    app.use('/api/webook', webhookRouter);
+
+    app.use(
+        cors({
+            origin: process.env.CLIENT_ORIGIN,
+        }),
+    );
 
     app.use('/api', router);
 
