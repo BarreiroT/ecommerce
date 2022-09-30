@@ -42,5 +42,5 @@ PostgresSource.initialize().then((source) => {
         res.status(status).json({ message });
     });
 
-    app.listen(Number(process.env.port), () => console.log(`Application listening on port ${process.env.PORT}`));
+    app.listen(Number(process.env.PORT), () => console.log(`Application listening on port ${process.env.PORT}`));
 });
