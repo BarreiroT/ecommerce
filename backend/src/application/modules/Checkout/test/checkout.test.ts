@@ -20,12 +20,7 @@ const testRunner = new TestRunner();
 const createOrder = () => {
     const checkoutSystem = testRunner.checkoutSystem();
 
-    return checkoutSystem.createOrder({
-        description: 'Test Order',
-        amount: 500,
-        currency: 'ARS',
-        state: OrderState.New,
-    });
+    return checkoutSystem.createOrder(500);
 };
 
 const setPaymentSystemVariablesToTesting = () => {
@@ -52,14 +47,7 @@ describe('Checkout System', () => {
         it('Creates an order', async () => {
             const checkoutSystem = testRunner.checkoutSystem();
 
-            await expect(
-                checkoutSystem.createOrder({
-                    description: 'Test Order',
-                    amount: 500,
-                    currency: 'ARS',
-                    state: OrderState.New,
-                }),
-            ).to.eventually.be.ok;
+            await expect(checkoutSystem.createOrder(500)).to.eventually.be.ok;
         });
 
         it('Finds an order', async () => {
@@ -89,11 +77,11 @@ describe('Checkout System', () => {
 
             const checkoutSystem = testRunner.checkoutSystem();
 
+            const order = await createOrder();
+
             await expect(
                 checkoutSystem.startsCheckoutProcess({
-                    amount: 50,
-                    description: 'Gracias por comprar en',
-                    currency: 'ARS',
+                    orderId: order.id,
                     customer: {
                         email: 'testing@mobbex.com',
                         name: 'Testing',

@@ -6,8 +6,8 @@ import { MobbexPayment } from './PaymentSystem';
 
 export const generateCheckoutLink: Controller<
     {
-        amount: number;
-        customer: Customer;
+        orderId: string;
+        customer?: Customer;
     },
     {},
     { redirectUrl: string }

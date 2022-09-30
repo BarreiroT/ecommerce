@@ -58,7 +58,7 @@ export class PaymentSystem {
         reference: string;
         description: string;
         currency: string;
-        customer: Customer;
+        customer?: Customer;
     }) {
         const checkout = {
             total,

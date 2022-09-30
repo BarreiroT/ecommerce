@@ -15,8 +15,13 @@ export class CheckoutSystem {
         this.paymentSystem = paymentSystem;
     }
 
-    createOrder(order: Order) {
-        order.state = OrderState.New;
+    createOrder(amount: number) {
+        const order: Order = {
+            amount,
+            description: 'Gracias por comprar en nuestro ecommerce.',
+            currency: 'ARS',
+            state: OrderState.New,
+        };
 
         return this.orderRepository.create(order);
     }
@@ -41,29 +46,14 @@ export class CheckoutSystem {
         return updated;
     }
 
-    async startsCheckoutProcess({
-        amount,
-        description,
-        currency,
-        customer,
-    }: {
-        amount: number;
-        description: string;
-        currency: string;
-        customer: Customer;
-    }) {
-        const order = await this.createOrder({
-            amount,
-            description,
-            currency,
-            state: OrderState.New,
-        });
+    async startsCheckoutProcess({ orderId, customer }: { orderId: string; customer?: Customer }) {
+        const order = await this.findOrderById(orderId);
 
         return this.paymentSystem.generateCheckoutLink({
-            total: amount,
-            description,
+            total: order.amount,
+            description: order.description,
             reference: order.id,
-            currency: 'ARS',
+            currency: order.currency,
             customer,
         });
     }

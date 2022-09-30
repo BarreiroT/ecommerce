@@ -11,18 +11,20 @@ const checkoutRouter = Router();
 checkoutRouter.post(
     '/start',
     [
-        body('amount', 'The selected amount is invalid.').isInt({ min: 1 }),
+        body('orderId', 'The selected order is invalid.').isUUID(),
         body('customer', 'The customer data is invalid.').custom((customer) => {
             const email = customer.email;
             const name = customer.name;
             const identification = customer.identification;
 
-            if (!email || !name || !identification) {
-                throw new Error('The customer data is invalid.');
-            }
+            if (email || name || identification) {
+                if (!email || !name || !identification) {
+                    throw new Error('The customer data is invalid.');
+                }
 
-            if (!isValidString(email) || !isValidString(name) || !isValidString(identification)) {
-                throw new Error('The customer data is invalid.');
+                if (!isValidString(email) || !isValidString(name) || !isValidString(identification)) {
+                    throw new Error('The customer data is invalid.');
+                }
             }
 
             return true;
