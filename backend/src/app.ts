@@ -24,7 +24,7 @@ PostgresSource.initialize().then((source) => {
 
     app.use(express.json());
 
-    app.use('/api/webook', webhookRouter);
+    app.use('/api/webhook', webhookRouter);
 
     app.use(
         cors({
