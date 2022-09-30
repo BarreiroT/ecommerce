@@ -1,0 +1,12 @@
+.header {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #00000080;
+    height: auto;
+}
+
+.create-button {
+    margin: .4rem;
+    margin-left: auto;
+    padding: .8rem;
+}
