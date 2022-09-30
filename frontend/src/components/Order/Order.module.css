@@ -1,0 +1,30 @@
+.main {
+    display: flex;
+    align-items: center;
+}
+
+.amount-container {
+    display: flex;
+}
+
+.state-container {
+    margin-left: auto;
+    margin-right: 1rem;
+    width: 15%;
+}
+
+.amount {
+    margin-right: 0.2rem;
+}
+
+.payed-state {
+    color: #1ee204;
+}
+
+.canceled-state {
+    color: #e20404;
+}
+
+.pending-state {
+    color: #dd9104;
+}

@@ -5,7 +5,7 @@ export enum OrderState {
     Canceled = 'Cancelada',
 }
 
-export type Order = {
+export type TOrder = {
     id: string;
     description: string;
 

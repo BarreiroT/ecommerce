@@ -39,3 +39,11 @@ export const createOrder = async (total: number) => {
         data: { amount: total },
     });
 };
+
+export const generateOrderPayment = async (orderId: string) => {
+    return query({
+        url: '/checkout/start',
+        method: 'POST',
+        data: { orderId },
+    });
+};
