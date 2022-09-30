@@ -1,5 +1,7 @@
 # App to try Mobbex
 
+This app is deployed to: [ecommerce.barreirot.com](https://ecommerce.barreirot.com)
+
 The idea behind this app was to create a front-end and a back-end to try an integration with Mobbex and be able to extend it in the future.
 
 This app includes a react app made with Vite where you can create orders and pay them and an express app that uses PostgreSQL as a database for those orders.
