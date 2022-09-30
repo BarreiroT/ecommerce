@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "start": "ts-node ./src/app.ts",
     "start:prod": "NODE_ENV=production node build/app.js",
     "test": "NODE_ENV=testing mocha -r ts-node/register './src/**/test/**/*.ts'",
     "postgres-test": "RUNNER_DATABASE=postgres npm run test"
