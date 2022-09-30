@@ -6,5 +6,7 @@ export interface OrderRepository {
 
     findById(id: string): Promise<Persisted<Order> | null>;
 
+    findAll(): Promise<Persisted<Order>[]>;
+
     updateOrderState(orderState: OrderState, orderId: string): Promise<boolean>;
 }

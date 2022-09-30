@@ -15,6 +15,10 @@ export class CheckoutSystem {
         this.paymentSystem = paymentSystem;
     }
 
+    findAllOrders() {
+        return this.orderRepository.findAll();
+    }
+
     createOrder(amount: number) {
         const order: Order = {
             amount,

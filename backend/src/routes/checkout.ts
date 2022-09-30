@@ -1,12 +1,25 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
 
-import { generateCheckoutLink, processMobbexWebhook } from '../application/modules/Checkout/CheckoutAPI';
+import {
+    createOrder,
+    generateCheckoutLink,
+    getOrders,
+    processMobbexWebhook,
+} from '../application/modules/Checkout/CheckoutAPI';
 import { validator } from '../middlewares/validation';
 
 const isValidString = (string: any) => typeof string === 'string' && string.length > 1;
 
 const checkoutRouter = Router();
+
+checkoutRouter.get('/orders', getOrders);
+
+checkoutRouter.post(
+    '/order',
+    [body('amount', 'The sent amount is invalid.').isInt({ min: 1 }), validator],
+    createOrder,
+);
 
 checkoutRouter.post(
     '/start',

@@ -20,6 +20,10 @@ export class InMemoryOrderRepository implements OrderRepository {
         return Promise.resolve(order || null);
     }
 
+    findAll(): Promise<Persisted<Order>[]> {
+        return Promise.resolve(this.orders);
+    }
+
     private findIndexById(id: string) {
         return this.orders.findIndex((o) => o.id === id);
     }

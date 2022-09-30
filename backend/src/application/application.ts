@@ -9,6 +9,10 @@ export class Application {
         this.checkoutSystem = checkoutSystem;
     }
 
+    getOrders() {
+        return this.checkoutSystem.findAllOrders();
+    }
+
     createOrder(amount: number) {
         return this.checkoutSystem.createOrder(amount);
     }

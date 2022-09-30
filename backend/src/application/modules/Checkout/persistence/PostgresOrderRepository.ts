@@ -28,6 +28,10 @@ export class PostgresOrderRepository implements OrderRepository {
         return this.repository.createQueryBuilder('order').select().where('order.id = :id', { id }).getOne();
     }
 
+    findAll(): Promise<Persisted<Order>[]> {
+        return this.repository.createQueryBuilder().select().getMany();
+    }
+
     async updateOrderState(orderState: OrderState, orderId: string): Promise<boolean> {
         const res = await this.repository
             .createQueryBuilder()
