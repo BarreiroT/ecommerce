@@ -1,4 +1,5 @@
 import { Order } from '../../../models';
+import { Product } from '../../../models/Product';
 import { Controller } from '../../../types/Controller';
 import { Customer } from '../../../types/Customer';
 import { MobbexPayment, MobbexEvent } from '../../../types/Mobbex';
@@ -7,7 +8,7 @@ import { Application } from '../../application';
 
 export const createOrder: Controller<
     {
-        amount: number;
+        products: Persisted<Product>[];
     },
     {},
     { order: Persisted<Order> }
@@ -15,9 +16,9 @@ export const createOrder: Controller<
     try {
         const application: Application = req.app.locals.application;
 
-        const amount = req.body.amount;
+        const products = req.body.products;
 
-        const order = await application.createOrder(amount);
+        const order = await application.createOrder(products);
 
         res.status(200).json({ order });
     } catch (err) {

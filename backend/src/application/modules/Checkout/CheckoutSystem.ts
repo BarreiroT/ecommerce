@@ -1,8 +1,10 @@
 import { NotFoundException, NotValidException } from '../../../exceptions/HttpException';
 import { Order } from '../../../models';
 import { OrderState } from '../../../models/Order';
+import { Product } from '../../../models/Product';
 import { Customer } from '../../../types/Customer';
 import { PaymentEvent } from '../../../types/PaymentEvent';
+import { Persisted } from '../../../types/Persisted';
 import { PaymentSystem } from './PaymentSystem';
 import { OrderRepository } from './persistence/OrderRepository';
 
@@ -19,12 +21,15 @@ export class CheckoutSystem {
         return this.orderRepository.findAll();
     }
 
-    createOrder(amount: number) {
+    createOrder(products: Persisted<Product>[]) {
+        const amount = products.reduce((sum, product) => sum + product.price, 0);
+
         const order: Order = {
             amount,
             description: 'Gracias por comprar en nuestro ecommerce.',
             currency: 'ARS',
             state: OrderState.New,
+            products,
         };
 
         return this.orderRepository.create(order);

@@ -1,5 +1,7 @@
+import { Product } from '../models/Product';
 import { Customer } from '../types/Customer';
 import { PaymentEvent } from '../types/PaymentEvent';
+import { Persisted } from '../types/Persisted';
 import { CheckoutSystem } from './modules/Checkout/CheckoutSystem';
 import { ProductSystem } from './modules/Products/ProductSystem';
 
@@ -16,8 +18,8 @@ export class Application {
         return this.checkoutSystem.findAllOrders();
     }
 
-    createOrder(amount: number) {
-        return this.checkoutSystem.createOrder(amount);
+    createOrder(products: Persisted<Product>[]) {
+        return this.checkoutSystem.createOrder(products);
     }
 
     startCheckoutProcess(data: { orderId: string; customer?: Customer }) {

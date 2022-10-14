@@ -3,6 +3,7 @@ import 'reflect-metadata';
 
 import { PersistedOrder } from './models';
 import { PersistedProduct } from './models/Product';
+import { OrderProduct } from './models/OrderProduct';
 
 const DATABASE_HOST = process.env.DATABASE_HOST || 'localhost';
 const DATABASE_PORT = Number(process.env.DATABASE_PORT) || 5432;
@@ -23,6 +24,6 @@ export const PostgresSource = new DataSource({
     logging: !isProd,
     subscribers: [],
     migrations: [],
-    entities: [PersistedOrder, PersistedProduct],
+    entities: [PersistedOrder, PersistedProduct, OrderProduct],
     dropSchema: isTesting,
 });

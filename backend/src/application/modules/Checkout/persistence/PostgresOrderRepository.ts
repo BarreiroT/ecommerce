@@ -2,18 +2,30 @@ import { DataSource, Repository } from 'typeorm';
 
 import { PersistedOrder, Order } from '../../../../models';
 import { OrderState } from '../../../../models/Order';
+import { OrderProduct } from '../../../../models/OrderProduct';
+import { Product } from '../../../../models/Product';
 import { Persisted } from '../../../../types/Persisted';
 import { OrderRepository } from './OrderRepository';
 
 export class PostgresOrderRepository implements OrderRepository {
-    private repository: Repository<PersistedOrder>;
+    private readonly repository: Repository<PersistedOrder>;
+    private readonly orderProductRepository: Repository<OrderProduct>;
 
     constructor(dataSource: DataSource) {
         this.repository = dataSource.getRepository(PersistedOrder);
+        this.orderProductRepository = dataSource.getRepository(OrderProduct);
     }
 
     async create(preOrder: Order): Promise<Persisted<Order>> {
         const order = await this.repository.save(preOrder);
+
+        const promises = preOrder.products.map((product) => {
+            const orderProduct = new OrderProduct(order.id, product.id);
+
+            return this.orderProductRepository.save(orderProduct);
+        });
+
+        await Promise.all(promises);
 
         return {
             id: order.id,
@@ -21,15 +33,38 @@ export class PostgresOrderRepository implements OrderRepository {
             amount: order.amount,
             currency: order.currency,
             state: order.state,
+            products: order.products,
         };
     }
 
-    findById(id: string): Promise<Persisted<Order> | null> {
-        return this.repository.createQueryBuilder('order').select().where('order.id = :id', { id }).getOne();
+    async findById(id: string): Promise<Persisted<Order> | null> {
+        const order = await this.repository
+            .createQueryBuilder('order')
+            .leftJoinAndSelect('order.orderProducts', 'orderProduct')
+            .leftJoinAndSelect('orderProduct.product', 'product')
+            .where('order.id = :id', { id })
+            .getOne();
+
+        if (order) {
+            order.products = order.orderProducts.map((orderProduct) => orderProduct.product);
+        }
+
+        return order;
     }
 
-    findAll(): Promise<Persisted<Order>[]> {
-        return this.repository.createQueryBuilder().select().getMany();
+    async findAll(): Promise<Persisted<Order>[]> {
+        const orders = await this.repository
+            .createQueryBuilder('order')
+            .select()
+            .leftJoin('order.orderProducts', 'orderProduct')
+            .leftJoin('orderProduct.product', 'product')
+            .getMany();
+
+        return orders.map((order) => {
+            order.products = order.orderProducts.map((orderProduct) => orderProduct.product);
+
+            return order;
+        });
     }
 
     async updateOrderState(orderState: OrderState, orderId: string): Promise<boolean> {

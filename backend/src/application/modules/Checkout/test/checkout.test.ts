@@ -1,8 +1,10 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { OrderState } from '../../../../models/Order';
+import { Product } from '../../../../models/Product';
 import { TestRunner } from '../../../../TestRunner';
 import { MobbexPayment, MobbexEvent } from '../../../../types/Mobbex';
+import { Persisted } from '../../../../types/Persisted';
 
 import checkoutEvent from './mobbexEvent.json';
 
@@ -16,13 +18,29 @@ const { expect } = chai;
 
 const testRunner = new TestRunner();
 
-const createOrder = () => {
-    const checkoutSystem = testRunner.checkoutSystem();
+const createProduct = (price: number) => {
+    const productSystem = testRunner.productSystem();
 
-    return checkoutSystem.createOrder(500);
+    return productSystem.create('Test Product', price);
 };
 
-const setPaymentSystemVariablesToTesting = () => {
+const createProducts = () => {
+    const promises = [];
+
+    for (let i = 0; i < 9; i++) {
+        promises.push(createProduct(500));
+    }
+
+    return Promise.all(promises);
+};
+
+const createOrder = (products: Persisted<Product>[]) => {
+    const checkoutSystem = testRunner.checkoutSystem();
+
+    return checkoutSystem.createOrder(products);
+};
+
+const setPaymentSystemVariablesForTesting = () => {
     process.env.PAYMENT_SYSTEM_API_KEY = 'zJ8LFTBX6Ba8D611e9io13fDZAwj0QmKO1Hn1yIj';
     process.env.PAYMENT_SYSTEM_ACCESS_TOKEN = 'd31f0721-2f85-44e7-bcc6-15e19d1a53cc';
     process.env.PAYMENT_SYSTEM_ENTITY = 'Demo Mobbex';
@@ -32,8 +50,9 @@ const setPaymentSystemVariablesToTesting = () => {
 
 describe('Checkout System', () => {
     before(() => {
-        setPaymentSystemVariablesToTesting();
+        setPaymentSystemVariablesForTesting();
     });
+
     beforeEach(async () => {
         await testRunner.generateStorages();
     });
@@ -46,17 +65,38 @@ describe('Checkout System', () => {
         it('Creates an order', async () => {
             const checkoutSystem = testRunner.checkoutSystem();
 
-            await expect(checkoutSystem.createOrder(500)).to.eventually.be.ok;
+            const products = await createProducts();
+
+            await expect(checkoutSystem.createOrder(products)).to.eventually.be.ok;
         });
 
         it('Finds an order', async () => {
             const checkoutSystem = testRunner.checkoutSystem();
 
-            const createdOrder = await createOrder();
+            const products = await createProducts();
+
+            const createdOrder = await createOrder(products);
 
             const foundOrder = await checkoutSystem.findOrderById(createdOrder.id);
 
             expect(foundOrder.id).to.equal(createdOrder.id);
+        });
+
+        it('Calculates the order amount correctly', async () => {
+            const total = 5000;
+
+            const amountOfProducts = 5;
+
+            const products = [];
+
+            for (let i = 0; i < amountOfProducts; i++) {
+                const product = await createProduct(total / amountOfProducts);
+                products.push(product);
+            }
+
+            const createdOrder = await createOrder(products);
+
+            expect(createdOrder.amount).to.equal(total);
         });
 
         it('Fails when searching for a nonexistent order', async () => {
@@ -76,7 +116,9 @@ describe('Checkout System', () => {
 
             const checkoutSystem = testRunner.checkoutSystem();
 
-            const order = await createOrder();
+            const products = await createProducts();
+
+            const order = await createOrder(products);
 
             await expect(
                 checkoutSystem.startsCheckoutProcess({
@@ -95,7 +137,9 @@ describe('Checkout System', () => {
 
             const event: MobbexEvent = deepClonedEvent();
 
-            const order = await createOrder();
+            const products = await createProducts();
+
+            const order = await createOrder(products);
 
             event.data.payment.reference = order.id;
             event.data.payment.status.code = '200';
@@ -115,7 +159,9 @@ describe('Checkout System', () => {
 
             const event: MobbexEvent = deepClonedEvent();
 
-            const order = await createOrder();
+            const products = await createProducts();
+
+            const order = await createOrder(products);
 
             event.data.payment.reference = order.id;
             event.data.payment.status.code = '3';
@@ -135,7 +181,9 @@ describe('Checkout System', () => {
 
             const event: MobbexEvent = deepClonedEvent();
 
-            const order = await createOrder();
+            const products = await createProducts();
+
+            const order = await createOrder(products);
 
             event.data.payment.reference = order.id;
             event.data.payment.status.code = '400';
