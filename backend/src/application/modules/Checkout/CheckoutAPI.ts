@@ -1,10 +1,9 @@
 import { Order } from '../../../models';
 import { Controller } from '../../../types/Controller';
 import { Customer } from '../../../types/Customer';
-import { MobbexEvent } from '../../../types/Mobbex';
+import { MobbexPayment, MobbexEvent } from '../../../types/Mobbex';
 import { Persisted } from '../../../types/Persisted';
 import { Application } from '../../application';
-import { MobbexPayment } from './PaymentSystem';
 
 export const createOrder: Controller<
     {
