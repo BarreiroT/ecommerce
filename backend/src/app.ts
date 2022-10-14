@@ -12,6 +12,8 @@ import { PostgresSource } from './database';
 import { HttpException } from './exceptions/HttpException';
 import { router } from './routes';
 import { webhookRouter } from './routes/webhook';
+import { PostgresProductRepository } from './application/modules/Products/persistence/PostgresProductRepository';
+import { ProductSystem } from './application/modules/Products/ProductSystem';
 
 PostgresSource.initialize().then((source) => {
     const app = express();
@@ -20,7 +22,10 @@ PostgresSource.initialize().then((source) => {
     const paymentSystem = new PaymentSystem();
     const checkoutSystem = new CheckoutSystem(orderRepository, paymentSystem);
 
-    app.locals.application = new Application(checkoutSystem);
+    const productRepository = new PostgresProductRepository(source);
+    const productSystem = new ProductSystem(productRepository);
+
+    app.locals.application = new Application(checkoutSystem, productSystem);
 
     app.use(express.json());
 

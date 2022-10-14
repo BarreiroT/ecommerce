@@ -28,4 +28,8 @@ export class ProductSystem {
 
         return product;
     }
+
+    findAll() {
+        return this.repository.findAll();
+    }
 }
