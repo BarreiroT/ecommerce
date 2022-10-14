@@ -1,4 +1,4 @@
-import { NotValidException } from '../../../exceptions/HttpException';
+import { NotFoundException, NotValidException } from '../../../exceptions/HttpException';
 import { Order } from '../../../models';
 import { OrderState } from '../../../models/Order';
 import { Customer } from '../../../types/Customer';
@@ -34,7 +34,7 @@ export class CheckoutSystem {
         const order = await this.orderRepository.findById(orderId);
 
         if (!order) {
-            throw new NotValidException('This order does not exist.');
+            throw new NotFoundException('This order does not exist.');
         }
 
         return order;

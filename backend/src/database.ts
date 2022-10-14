@@ -2,6 +2,7 @@ import { DataSource } from 'typeorm';
 import 'reflect-metadata';
 
 import { PersistedOrder } from './models';
+import { PersistedProduct } from './models/Product';
 
 const DATABASE_HOST = process.env.DATABASE_HOST || 'localhost';
 const DATABASE_PORT = Number(process.env.DATABASE_PORT) || 5432;
@@ -22,6 +23,6 @@ export const PostgresSource = new DataSource({
     logging: !isProd,
     subscribers: [],
     migrations: [],
-    entities: [PersistedOrder],
+    entities: [PersistedOrder, PersistedProduct],
     dropSchema: isTesting,
 });

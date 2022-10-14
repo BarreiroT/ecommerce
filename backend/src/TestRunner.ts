@@ -1,51 +1,44 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { DataSource } from 'typeorm';
-
-import { PostgresSource } from './database';
-
-import { OrderRepository } from './application/modules/Checkout/persistence/OrderRepository';
-import { PostgresOrderRepository } from './application/modules/Checkout/persistence/PostgresOrderRepository';
-import { InMemoryOrderRepository } from './application/modules/Checkout/test/InMemoryOrderRepository';
 import { CheckoutSystem } from './application/modules/Checkout/CheckoutSystem';
 import { PaymentSystem } from './application/modules/Checkout/PaymentSystem';
+import { ProductSystem } from './application/modules/Products/ProductSystem';
+import { Environment } from './infrastructure/environment/Environment';
+import { PostgresEnvironment } from './infrastructure/environment/PostgresEnvironment';
+import { InMemoryEnvironment } from './infrastructure/environment/InMemoryEnvironment';
 
 export class TestRunner {
     private readonly database: string;
 
-    private orderRepository!: OrderRepository;
-
-    private source?: DataSource;
+    private readonly environment: Environment;
 
     constructor() {
         this.database = process.env.RUNNER_DATABASE || 'in-memory';
 
         process.env.NODE_ENV = 'testing';
+
+        if (this.database === 'postgres') {
+            this.environment = new PostgresEnvironment();
+        } else {
+            this.environment = new InMemoryEnvironment();
+        }
     }
 
     async generateStorages() {
-        if (this.database === 'postgres') {
-            this.source = await PostgresSource.initialize();
-
-            this.orderRepository = new PostgresOrderRepository(this.source);
-
-            return;
-        }
-
-        this.orderRepository = new InMemoryOrderRepository();
+        return this.environment.generateStorages();
     }
 
     async cleanStoredData() {
-        if (this.database === 'postgres' && this.source) {
-            return this.source.destroy();
-        }
-
-        (this.orderRepository as InMemoryOrderRepository).drop();
+        return this.environment.cleanStoredData();
     }
 
     checkoutSystem() {
         const paymentSystem = new PaymentSystem();
-        return new CheckoutSystem(this.orderRepository, paymentSystem);
+        return new CheckoutSystem(this.environment.orderRepository, paymentSystem);
+    }
+
+    productSystem() {
+        return new ProductSystem(this.environment.productRepository);
     }
 }
