@@ -2,8 +2,7 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { OrderState } from '../../../../models/Order';
 import { TestRunner } from '../../../../TestRunner';
-import { MobbexEvent } from '../../../../types/Mobbex';
-import { MobbexPayment } from '../PaymentSystem';
+import { MobbexPayment, MobbexEvent } from '../../../../types/Mobbex';
 
 import checkoutEvent from './mobbexEvent.json';
 
