@@ -11,3 +11,25 @@
     font-size: 1.5rem;
     font-weight: bold;
 }
+
+.price-container {
+    margin-top: 1rem;
+}
+
+.price {
+    display: inline;
+    margin: .2rem;
+    font-size: 1rem;
+}
+
+.amount-button {
+    outline: none;
+    border: none;
+    width: 1.5rem;
+}
+
+.amount {
+    display: inline;
+    font-size: 1rem;
+    margin: 0.5rem;
+}
