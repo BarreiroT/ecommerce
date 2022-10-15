@@ -1,3 +1,4 @@
+import { OrderProduct } from '../models/OrderProduct';
 import { Product } from '../models/Product';
 import { Customer } from '../types/Customer';
 import { PaymentEvent } from '../types/PaymentEvent';
@@ -18,7 +19,7 @@ export class Application {
         return this.checkoutSystem.findAllOrders();
     }
 
-    createOrder(products: Persisted<Product>[]) {
+    createOrder(products: OrderProduct[]) {
         return this.checkoutSystem.createOrder(products);
     }
 

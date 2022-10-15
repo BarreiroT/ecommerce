@@ -1,6 +1,7 @@
 import { NotFoundException, NotValidException } from '../../../exceptions/HttpException';
 import { Order } from '../../../models';
 import { OrderState } from '../../../models/Order';
+import { OrderProduct } from '../../../models/OrderProduct';
 import { Product } from '../../../models/Product';
 import { Customer } from '../../../types/Customer';
 import { PaymentEvent } from '../../../types/PaymentEvent';
@@ -21,11 +22,11 @@ export class CheckoutSystem {
         return this.orderRepository.findAll();
     }
 
-    createOrder(products: Persisted<Product>[]) {
-        const amount = products.reduce((sum, product) => sum + product.price, 0);
+    createOrder(products: OrderProduct[]) {
+        const total = products.reduce((sum, product) => sum + product.product.price * product.amount, 0);
 
         const order: Order = {
-            amount,
+            total,
             description: 'Gracias por comprar en nuestro ecommerce.',
             currency: 'ARS',
             state: OrderState.New,
@@ -59,7 +60,7 @@ export class CheckoutSystem {
         const order = await this.findOrderById(orderId);
 
         return this.paymentSystem.generateCheckoutLink({
-            total: order.amount,
+            total: order.total,
             description: order.description,
             reference: order.id,
             currency: order.currency,

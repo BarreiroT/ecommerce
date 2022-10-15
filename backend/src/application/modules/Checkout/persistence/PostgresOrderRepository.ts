@@ -2,25 +2,25 @@ import { DataSource, Repository } from 'typeorm';
 
 import { PersistedOrder, Order } from '../../../../models';
 import { OrderState } from '../../../../models/Order';
-import { OrderProduct } from '../../../../models/OrderProduct';
+import { PersistedOrderProduct } from '../../../../models/OrderProduct';
 import { Product } from '../../../../models/Product';
 import { Persisted } from '../../../../types/Persisted';
 import { OrderRepository } from './OrderRepository';
 
 export class PostgresOrderRepository implements OrderRepository {
     private readonly repository: Repository<PersistedOrder>;
-    private readonly orderProductRepository: Repository<OrderProduct>;
+    private readonly orderProductRepository: Repository<PersistedOrderProduct>;
 
     constructor(dataSource: DataSource) {
         this.repository = dataSource.getRepository(PersistedOrder);
-        this.orderProductRepository = dataSource.getRepository(OrderProduct);
+        this.orderProductRepository = dataSource.getRepository(PersistedOrderProduct);
     }
 
     async create(preOrder: Order): Promise<Persisted<Order>> {
         const order = await this.repository.save(preOrder);
 
         const promises = preOrder.products.map((product) => {
-            const orderProduct = new OrderProduct(order.id, product.id);
+            const orderProduct = new PersistedOrderProduct(product.amount, order.id, product.product.id);
 
             return this.orderProductRepository.save(orderProduct);
         });
@@ -30,7 +30,7 @@ export class PostgresOrderRepository implements OrderRepository {
         return {
             id: order.id,
             description: order.description,
-            amount: order.amount,
+            total: order.total,
             currency: order.currency,
             state: order.state,
             products: order.products,
@@ -46,7 +46,7 @@ export class PostgresOrderRepository implements OrderRepository {
             .getOne();
 
         if (order) {
-            order.products = order.orderProducts.map((orderProduct) => orderProduct.product);
+            order.products = order.orderProducts;
         }
 
         return order;
@@ -61,7 +61,7 @@ export class PostgresOrderRepository implements OrderRepository {
             .getMany();
 
         return orders.map((order) => {
-            order.products = order.orderProducts.map((orderProduct) => orderProduct.product);
+            order.products = order.orderProducts;
 
             return order;
         });

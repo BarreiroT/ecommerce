@@ -1,11 +1,21 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Persisted } from '../types/Persisted';
 
 import { Base } from './Base';
 import { Order, PersistedOrder } from './Order';
-import { PersistedProduct } from './Product';
+import { PersistedProduct, Product } from './Product';
+
+export interface OrderProduct {
+    amount: number;
+
+    product: Persisted<Product>;
+}
 
 @Entity({ name: 'order_products' })
-export class OrderProduct extends Base {
+export class PersistedOrderProduct extends Base implements OrderProduct {
+    @Column()
+    amount: number;
+
     @ManyToOne(() => PersistedOrder, (order) => order.id, {
         onDelete: 'CASCADE',
     })
@@ -24,8 +34,9 @@ export class OrderProduct extends Base {
     @Column({ name: 'product_id' })
     productId: string;
 
-    constructor(orderId: string, productId: string) {
+    constructor(amount: number, orderId: string, productId: string) {
         super();
+        this.amount = amount;
         this.orderId = orderId;
         this.productId = productId;
     }

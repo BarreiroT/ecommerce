@@ -1,5 +1,5 @@
 import { Order } from '../../../models';
-import { Product } from '../../../models/Product';
+import { OrderProduct } from '../../../models/OrderProduct';
 import { Controller } from '../../../types/Controller';
 import { Customer } from '../../../types/Customer';
 import { MobbexPayment, MobbexEvent } from '../../../types/Mobbex';
@@ -8,7 +8,7 @@ import { Application } from '../../application';
 
 export const createOrder: Controller<
     {
-        products: Persisted<Product>[];
+        products: OrderProduct[];
     },
     {},
     { order: Persisted<Order> }

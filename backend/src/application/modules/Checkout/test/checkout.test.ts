@@ -1,6 +1,7 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { OrderState } from '../../../../models/Order';
+import { OrderProduct } from '../../../../models/OrderProduct';
 import { Product } from '../../../../models/Product';
 import { TestRunner } from '../../../../TestRunner';
 import { MobbexPayment, MobbexEvent } from '../../../../types/Mobbex';
@@ -24,17 +25,18 @@ const createProduct = (price: number) => {
     return productSystem.create('Test Product', price);
 };
 
-const createProducts = () => {
-    const promises = [];
+const createOrderProducts = async () => {
+    const orderProducts: OrderProduct[] = [];
 
     for (let i = 0; i < 9; i++) {
-        promises.push(createProduct(500));
+        const product = await createProduct(500);
+        orderProducts.push({ amount: 1, product });
     }
 
-    return Promise.all(promises);
+    return orderProducts;
 };
 
-const createOrder = (products: Persisted<Product>[]) => {
+const createOrder = (products: OrderProduct[]) => {
     const checkoutSystem = testRunner.checkoutSystem();
 
     return checkoutSystem.createOrder(products);
@@ -65,7 +67,7 @@ describe('Checkout System', () => {
         it('Creates an order', async () => {
             const checkoutSystem = testRunner.checkoutSystem();
 
-            const products = await createProducts();
+            const products = await createOrderProducts();
 
             await expect(checkoutSystem.createOrder(products)).to.eventually.be.ok;
         });
@@ -73,7 +75,7 @@ describe('Checkout System', () => {
         it('Finds an order', async () => {
             const checkoutSystem = testRunner.checkoutSystem();
 
-            const products = await createProducts();
+            const products = await createOrderProducts();
 
             const createdOrder = await createOrder(products);
 
@@ -91,12 +93,17 @@ describe('Checkout System', () => {
 
             for (let i = 0; i < amountOfProducts; i++) {
                 const product = await createProduct(total / amountOfProducts);
-                products.push(product);
+                products.push({ amount: 1, product });
             }
 
             const createdOrder = await createOrder(products);
 
-            expect(createdOrder.amount).to.equal(total);
+            const product = products[0].product;
+
+            const secondOrder = await createOrder([{ amount: 5, product }]);
+
+            expect(createdOrder.total).to.equal(total);
+            expect(secondOrder.total).to.equal(total);
         });
 
         it('Fails when searching for a nonexistent order', async () => {
@@ -116,7 +123,7 @@ describe('Checkout System', () => {
 
             const checkoutSystem = testRunner.checkoutSystem();
 
-            const products = await createProducts();
+            const products = await createOrderProducts();
 
             const order = await createOrder(products);
 
@@ -137,7 +144,7 @@ describe('Checkout System', () => {
 
             const event: MobbexEvent = deepClonedEvent();
 
-            const products = await createProducts();
+            const products = await createOrderProducts();
 
             const order = await createOrder(products);
 
@@ -159,7 +166,7 @@ describe('Checkout System', () => {
 
             const event: MobbexEvent = deepClonedEvent();
 
-            const products = await createProducts();
+            const products = await createOrderProducts();
 
             const order = await createOrder(products);
 
@@ -181,7 +188,7 @@ describe('Checkout System', () => {
 
             const event: MobbexEvent = deepClonedEvent();
 
-            const products = await createProducts();
+            const products = await createOrderProducts();
 
             const order = await createOrder(products);
 

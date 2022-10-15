@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { Persisted } from '../types/Persisted';
 import { Base } from './Base';
-import { OrderProduct } from './OrderProduct';
+import { OrderProduct, PersistedOrderProduct } from './OrderProduct';
 import { Product } from './Product';
 
 export enum OrderState {
@@ -14,12 +14,12 @@ export enum OrderState {
 export interface Order {
     description: string;
 
-    amount: number;
+    total: number;
     currency: string;
 
     state: OrderState;
 
-    products: Persisted<Product>[];
+    products: OrderProduct[];
 }
 
 @Entity({ name: 'orders' })
@@ -28,7 +28,7 @@ export class PersistedOrder extends Base implements Order {
     description: string;
 
     @Column()
-    amount: number;
+    total: number;
 
     @Column()
     currency: string;
@@ -36,15 +36,15 @@ export class PersistedOrder extends Base implements Order {
     @Column({ type: 'enum', enum: OrderState })
     state: OrderState;
 
-    @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.order)
-    orderProducts!: OrderProduct[];
+    @OneToMany(() => PersistedOrderProduct, (orderProduct) => orderProduct.order)
+    orderProducts!: PersistedOrderProduct[];
 
-    products: Persisted<Product>[];
+    products: OrderProduct[];
 
     constructor(
-        { description, amount, currency, state, products }: Order = {
+        { description, total, currency, state, products }: Order = {
             description: '',
-            amount: 0,
+            total: 0,
             currency: '',
             state: OrderState.New,
             products: [],
@@ -52,7 +52,7 @@ export class PersistedOrder extends Base implements Order {
     ) {
         super();
         this.description = description;
-        this.amount = amount;
+        this.total = total;
         this.currency = currency;
         this.state = state;
         this.products = products;
