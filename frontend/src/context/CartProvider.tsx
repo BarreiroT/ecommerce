@@ -1,4 +1,4 @@
-import { createContext, ReactElement, useState } from "react";
+import { createContext, ReactElement, useEffect, useState } from "react";
 import { Persisted } from "../types/Persisted";
 import { TProduct } from "../types/TProduct";
 
@@ -16,8 +16,14 @@ const CartContext = createContext<TCartProvider>({
     getAmountInCart: () => 0
 });
 
+const CART_ITEMS_KEY = "cart_items";
+
 const CartProvider = ({ children }: { children: ReactElement }) => {
     const [items, setItems] = useState<Items>({});
+
+    function persistCart(newItems: Items) {
+        localStorage.setItem(CART_ITEMS_KEY, JSON.stringify(newItems));
+    }
 
     function increaseItemAmount(product: Persisted<TProduct>) {
         setItems((oldItems => {
@@ -29,6 +35,8 @@ const CartProvider = ({ children }: { children: ReactElement }) => {
                 price: product.price,
                 name: product.name
             }
+
+            persistCart(newItems);
 
             return newItems;
         }));
@@ -51,6 +59,8 @@ const CartProvider = ({ children }: { children: ReactElement }) => {
                 name: product.name
             }
 
+            persistCart(newItems);
+
             return newItems;
         });
     }
@@ -58,6 +68,13 @@ const CartProvider = ({ children }: { children: ReactElement }) => {
     function getAmountInCart(productId: string) {
         return items[productId]?.amount || 0
     }
+
+    useEffect(() => {
+        const existingItems = localStorage.getItem(CART_ITEMS_KEY);
+        if(existingItems) {
+            setItems(JSON.parse(existingItems));
+        }
+    }, []);
 
     return (
         <CartContext.Provider value={{ increaseItemAmount, decreaseItemAmount, getAmountInCart }}>
