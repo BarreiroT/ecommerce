@@ -9,7 +9,7 @@ productRouter.post(
     '/product',
     [
         body('name', 'The product name is invalid.').isString().isLength({ min: 1, max: 250 }),
-        body('price', 'The product price is invalid.').isInt({ min: 0 }),
+        body('price', 'The product price is invalid.').isInt({ min: 1 }),
         validator,
     ],
     createProduct,
