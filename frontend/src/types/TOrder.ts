@@ -6,7 +6,6 @@ export enum OrderState {
 }
 
 export type TOrder = {
-    id: string;
     description: string;
 
     amount: number;

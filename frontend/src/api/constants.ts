@@ -6,4 +6,4 @@ const localConstants = {
     url: 'http://localhost:3030/api',
 };
 
-export const apiConstants = prodConstants;
+export const apiConstants = localConstants;

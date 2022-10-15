@@ -1,0 +1,13 @@
+.main {
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+}
+
+.name {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+}

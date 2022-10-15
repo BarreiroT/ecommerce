@@ -1,14 +1,13 @@
 import { useQuery } from "@tanstack/react-query"
 import { getOrders } from "../../api/API"
-import { TOrder } from "../../types/TOrder"
-import { Loader } from "../UI/Loader/Loader"
-import { Order } from "../Order/Order";
+import { Loader } from "../../components/UI/Loader/Loader"
+import { Order } from "../../components/Order/Order";
 
 import classes from './Orders.module.css';
 
 export const Orders = () => {
 
-    const { isLoading, data } = useQuery<TOrder[]>(["orders"], getOrders, {
+    const { isLoading, data } = useQuery(["orders"], getOrders, {
         retry: false,
         refetchOnWindowFocus: false
     })
