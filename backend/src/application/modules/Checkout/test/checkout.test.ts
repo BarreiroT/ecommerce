@@ -100,7 +100,7 @@ describe('Checkout System', () => {
 
             const product = products[0].product;
 
-            const secondOrder = await createOrder([{ amount: 5, product }]);
+            const secondOrder = await createOrder([{ amount: amountOfProducts, product }]);
 
             expect(createdOrder.total).to.equal(total);
             expect(secondOrder.total).to.equal(total);
