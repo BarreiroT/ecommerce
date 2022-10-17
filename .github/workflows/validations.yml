@@ -19,7 +19,7 @@ jobs:
               working-directory: ./backend
               run: npm install
 
-            - name: Run tests
+            - name: Run linter
               working-directory: ./backend
               run: npm run linter
 
