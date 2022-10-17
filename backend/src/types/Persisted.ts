@@ -1,1 +1,1 @@
-export type Persisted<T = {}> = { id: string } & T;
+export type Persisted<T = Record<string, unknown>> = { id: string } & T;

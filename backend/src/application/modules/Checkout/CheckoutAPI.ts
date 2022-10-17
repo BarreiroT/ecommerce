@@ -1,5 +1,4 @@
 import { Order } from '../../../models';
-import { OrderProduct } from '../../../models/OrderProduct';
 import { Controller } from '../../../types/Controller';
 import { Customer } from '../../../types/Customer';
 import { MobbexPayment, MobbexEvent } from '../../../types/Mobbex';
@@ -10,7 +9,7 @@ export const createOrder: Controller<
     {
         clientOrders: { amount: number; productId: string }[];
     },
-    {},
+    unknown,
     { order: Persisted<Order> }
 > = async (req, res, next) => {
     try {
@@ -28,7 +27,7 @@ export const createOrder: Controller<
     }
 };
 
-export const getOrders: Controller<{}, {}, { orders: Persisted<Order>[] }> = async (req, res, next) => {
+export const getOrders: Controller<unknown, unknown, { orders: Persisted<Order>[] }> = async (req, res, next) => {
     try {
         const application: Application = req.app.locals.application;
 
@@ -45,7 +44,7 @@ export const generateCheckoutLink: Controller<
         orderId: string;
         customer?: Customer;
     },
-    {},
+    unknown,
     { redirectUrl: string }
 > = async (req, res, next) => {
     try {

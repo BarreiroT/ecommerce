@@ -10,8 +10,8 @@ export type MobbexCheckout = {
         total: number;
         created: number;
         intent: { token: string };
-        paymentMethods: {}[];
-        warnings?: {}[];
+        paymentMethods: Record<string, unknown>[];
+        warnings?: Record<string, unknown>[];
     };
 };
 
@@ -34,18 +34,18 @@ export type MobbexEvent = {
                 message: string;
             };
             total: number;
-            currency: {};
-            riskAnalysis: {};
+            currency: Record<string, unknown>;
+            riskAnalysis: Record<string, unknown>;
             created: string;
             updated: string;
             reference: string;
-            source: {};
+            source: Record<string, unknown>;
         };
-        entity: {};
-        customer: {};
-        user: {};
-        source: {};
-        checkout: {};
+        entity: Record<string, unknown>;
+        customer: Record<string, unknown>;
+        user: Record<string, unknown>;
+        source: Record<string, unknown>;
+        checkout: Record<string, unknown>;
     };
 };
 

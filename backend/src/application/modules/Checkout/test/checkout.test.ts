@@ -2,10 +2,8 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { OrderState } from '../../../../models/Order';
 import { OrderProduct } from '../../../../models/OrderProduct';
-import { Product } from '../../../../models/Product';
 import { TestRunner } from '../../../../TestRunner';
 import { MobbexPayment, MobbexEvent } from '../../../../types/Mobbex';
-import { Persisted } from '../../../../types/Persisted';
 
 import checkoutEvent from './mobbexEvent.json';
 

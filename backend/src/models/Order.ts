@@ -1,8 +1,6 @@
 import { Column, Entity, OneToMany } from 'typeorm';
-import { Persisted } from '../types/Persisted';
 import { Base } from './Base';
 import { OrderProduct, PersistedOrderProduct } from './OrderProduct';
-import { Product } from './Product';
 
 export enum OrderState {
     New = 'Nuevo',

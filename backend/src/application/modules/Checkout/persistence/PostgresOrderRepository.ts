@@ -3,7 +3,6 @@ import { DataSource, Repository } from 'typeorm';
 import { PersistedOrder, Order } from '../../../../models';
 import { OrderState } from '../../../../models/Order';
 import { PersistedOrderProduct } from '../../../../models/OrderProduct';
-import { Product } from '../../../../models/Product';
 import { Persisted } from '../../../../types/Persisted';
 import { OrderRepository } from './OrderRepository';
 

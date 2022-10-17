@@ -8,7 +8,7 @@ export const createProduct: Controller<
         name: string;
         price: number;
     },
-    {},
+    unknown,
     { product: Persisted<Product> }
 > = async (req, res, next) => {
     try {
@@ -25,7 +25,7 @@ export const createProduct: Controller<
     }
 };
 
-export const getProducts: Controller<{}, {}, { products: Persisted<Product>[] }> = async (req, res, next) => {
+export const getProducts: Controller<unknown, unknown, { products: Persisted<Product>[] }> = async (req, res, next) => {
     try {
         const application: Application = req.app.locals.application;
 
