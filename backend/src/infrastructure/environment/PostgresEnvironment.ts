@@ -5,20 +5,30 @@ import { PostgresProductRepository } from '../../application/modules/Products/pe
 import { Environment } from './Environment';
 import { PostgresSource } from '../../database';
 
-export class PostgresEnvironment implements Environment {
-    source!: DataSource;
-
+export class PostgresEnvironment extends Environment {
+    source!: DataSource | null;
     orderRepository!: PostgresOrderRepository;
     productRepository!: PostgresProductRepository;
 
+    constructor(source?: DataSource) {
+        super();
+        if (source) {
+            this.source = source;
+            this.generateStorages();
+        }
+    }
+
     async generateStorages() {
-        this.source = await PostgresSource.initialize();
+        if (!this.source?.isInitialized) {
+            this.source = await PostgresSource.initialize();
+        }
 
         this.orderRepository = new PostgresOrderRepository(this.source);
         this.productRepository = new PostgresProductRepository(this.source);
     }
 
-    cleanStoredData(): Promise<void> {
-        return this.source.destroy();
+    async cleanStoredData(): Promise<void> {
+        await this.source?.destroy();
+        this.source = null;
     }
 }

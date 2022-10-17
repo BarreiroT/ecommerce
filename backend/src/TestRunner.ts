@@ -1,9 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { CheckoutSystem } from './application/modules/Checkout/CheckoutSystem';
-import { PaymentSystem } from './application/modules/Checkout/PaymentSystem';
-import { ProductSystem } from './application/modules/Products/ProductSystem';
 import { Environment } from './infrastructure/environment/Environment';
 import { PostgresEnvironment } from './infrastructure/environment/PostgresEnvironment';
 import { InMemoryEnvironment } from './infrastructure/environment/InMemoryEnvironment';
@@ -25,20 +22,19 @@ export class TestRunner {
         }
     }
 
-    async generateStorages() {
+    generateStorages() {
         return this.environment.generateStorages();
     }
 
-    async cleanStoredData() {
+    cleanStoredData() {
         return this.environment.cleanStoredData();
     }
 
     checkoutSystem() {
-        const paymentSystem = new PaymentSystem();
-        return new CheckoutSystem(this.environment.orderRepository, paymentSystem);
+        return this.environment.checkoutSystem();
     }
 
     productSystem() {
-        return new ProductSystem(this.environment.productRepository);
+        return this.environment.productSystem();
     }
 }

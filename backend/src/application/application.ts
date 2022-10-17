@@ -1,8 +1,7 @@
+import { Environment } from '../infrastructure/environment/Environment';
 import { OrderProduct } from '../models/OrderProduct';
-import { Product } from '../models/Product';
 import { Customer } from '../types/Customer';
 import { PaymentEvent } from '../types/PaymentEvent';
-import { Persisted } from '../types/Persisted';
 import { CheckoutSystem } from './modules/Checkout/CheckoutSystem';
 import { ProductSystem } from './modules/Products/ProductSystem';
 
@@ -10,9 +9,9 @@ export class Application {
     private readonly checkoutSystem: CheckoutSystem;
     private readonly productSystem: ProductSystem;
 
-    constructor(checkoutSystem: CheckoutSystem, productSystem: ProductSystem) {
-        this.checkoutSystem = checkoutSystem;
-        this.productSystem = productSystem;
+    constructor(environment: Environment) {
+        this.checkoutSystem = environment.checkoutSystem();
+        this.productSystem = environment.productSystem();
     }
 
     getOrders() {

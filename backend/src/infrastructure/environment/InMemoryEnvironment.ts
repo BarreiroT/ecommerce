@@ -2,7 +2,7 @@ import { InMemoryOrderRepository } from '../../application/modules/Checkout/test
 import { InMemoryProductRepository } from '../../application/modules/Products/test/InMemoryProductRepository';
 import { Environment } from './Environment';
 
-export class InMemoryEnvironment implements Environment {
+export class InMemoryEnvironment extends Environment {
     orderRepository!: InMemoryOrderRepository;
     productRepository!: InMemoryProductRepository;
 

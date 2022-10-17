@@ -5,27 +5,18 @@ import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 
 import { Application } from './application/application';
-import { CheckoutSystem } from './application/modules/Checkout/CheckoutSystem';
-import { PaymentSystem } from './application/modules/Checkout/PaymentSystem';
-import { PostgresOrderRepository } from './application/modules/Checkout/persistence/PostgresOrderRepository';
 import { PostgresSource } from './database';
 import { HttpException } from './exceptions/HttpException';
 import { router } from './routes';
 import { webhookRouter } from './routes/webhook';
-import { PostgresProductRepository } from './application/modules/Products/persistence/PostgresProductRepository';
-import { ProductSystem } from './application/modules/Products/ProductSystem';
+import { PostgresEnvironment } from './infrastructure/environment/PostgresEnvironment';
 
 PostgresSource.initialize().then((source) => {
     const app = express();
 
-    const orderRepository = new PostgresOrderRepository(source);
-    const paymentSystem = new PaymentSystem();
-    const checkoutSystem = new CheckoutSystem(orderRepository, paymentSystem);
+    const environment = new PostgresEnvironment(source);
 
-    const productRepository = new PostgresProductRepository(source);
-    const productSystem = new ProductSystem(productRepository);
-
-    app.locals.application = new Application(checkoutSystem, productSystem);
+    app.locals.application = new Application(environment);
 
     app.use(express.json());
 
