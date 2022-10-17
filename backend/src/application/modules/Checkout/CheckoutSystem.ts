@@ -2,10 +2,8 @@ import { NotFoundException, NotValidException } from '../../../exceptions/HttpEx
 import { Order } from '../../../models';
 import { OrderState } from '../../../models/Order';
 import { OrderProduct } from '../../../models/OrderProduct';
-import { Product } from '../../../models/Product';
 import { Customer } from '../../../types/Customer';
 import { PaymentEvent } from '../../../types/PaymentEvent';
-import { Persisted } from '../../../types/Persisted';
 import { PaymentSystem } from './PaymentSystem';
 import { OrderRepository } from './persistence/OrderRepository';
 

@@ -8,7 +8,7 @@ import { Application } from '../../application';
 
 export const createOrder: Controller<
     {
-        products: OrderProduct[];
+        clientOrders: { amount: number; productId: string }[];
     },
     {},
     { order: Persisted<Order> }
@@ -16,9 +16,11 @@ export const createOrder: Controller<
     try {
         const application: Application = req.app.locals.application;
 
-        const products = req.body.products;
+        const clientOrders = req.body.clientOrders;
 
-        const order = await application.createOrder(products);
+        const orderProducts = await application.mapClientOrdersToOrderProducts(clientOrders);
+
+        const order = await application.createOrder(orderProducts);
 
         res.status(200).json({ order });
     } catch (err) {

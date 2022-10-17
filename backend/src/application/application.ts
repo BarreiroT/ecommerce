@@ -19,6 +19,16 @@ export class Application {
         return this.checkoutSystem.findAllOrders();
     }
 
+    async mapClientOrdersToOrderProducts(orders: { amount: number; productId: string }[]) {
+        const promises = orders.map(async (order) => {
+            const product = await this.getProductById(order.productId);
+
+            return { amount: order.amount, product };
+        });
+
+        return Promise.all(promises);
+    }
+
     createOrder(products: OrderProduct[]) {
         return this.checkoutSystem.createOrder(products);
     }
@@ -33,6 +43,10 @@ export class Application {
 
     createProduct(name: string, price: number) {
         return this.productSystem.create(name, price);
+    }
+
+    getProductById(productId: string) {
+        return this.productSystem.findProductById(productId);
     }
 
     getProducts() {
