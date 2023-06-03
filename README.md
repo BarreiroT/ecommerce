@@ -1,6 +1,6 @@
 # App to try Mobbex
 
-This app is deployed to: [ecommerce.barreirot.com](https://ecommerce.barreirot.com)
+<del>This app was deployed to: [ecommerce.barreirot.com](https://ecommerce.barreirot.com)</del>
 
 The idea behind this app was to create a front-end and a back-end to try an integration with Mobbex and be able to extend it in the future.
 
